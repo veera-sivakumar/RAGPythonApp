@@ -12,6 +12,11 @@ from vector_db import QdrantStorage
 from custom_types import RAQQueryResult, RAGSearchResult, RAGUpsertResult, RAGChunkAndSrc
 
 load_dotenv()
+import os
+
+port = int(os.getenv("PORT", 8000))  # fallback to 8000 if not set
+
+
 inngest_client = inngest.Inngest(
     app_id="rag_app",
     logger=logging.getLogger("uvicorn"),
