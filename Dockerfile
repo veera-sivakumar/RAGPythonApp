@@ -20,5 +20,5 @@ COPY . .
 # Expose the port Railway will use
 EXPOSE 8000
 
-# Run uvicorn (replace main:app if your FastAPI app is in a different file)
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# ✅ Proper CMD (JSON form + dynamic PORT)
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
