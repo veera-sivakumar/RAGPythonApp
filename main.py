@@ -107,3 +107,7 @@ app = FastAPI()
 async def health():
     return {"status": "ok"}
 inngest.fast_api.serve(app, inngest_client, [rag_ingest_pdf, rag_query_pdf_ai])
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
