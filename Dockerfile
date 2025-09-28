@@ -1,15 +1,8 @@
-# Use official lightweight Python image
 FROM python:3.13-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/app/.venv/bin:$PATH"
-
-# Set workdir
 WORKDIR /app
 
-# Install system dependencies (important for ML + Qdrant client)
+# System dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -17,19 +10,18 @@ RUN apt-get update && apt-get install -y \
     git \
  && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency files
+# Copy dependency file first for caching
 COPY requirements.txt .
 
-# Install dependencies
-RUN python -m venv .venv && .venv/bin/pip install --upgrade pip && \
-    .venv/bin/pip install -r requirements.txt
+# Install dependencies directly into global Python
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Copy app code
+# Copy application code
 COPY . .
 
-# Expose app port (Railway will map automatically)
+# Expose port
 EXPOSE 8000
 
-# Start with Uvicorn
+# Start the app using PORT from environment variable
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
-
